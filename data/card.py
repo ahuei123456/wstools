@@ -7,6 +7,7 @@ class Card:
     price: int
     stock: str
     rarity: str
+    img_url: str
 
     def playset_price(self) -> int:
         return self.price * 4
