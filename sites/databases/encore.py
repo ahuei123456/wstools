@@ -15,7 +15,7 @@ class EncoreDecks:
         self.load()
     
     def load(self):
-        resp = requests.get(f'{url}{self.deckcode}')
+        resp = requests.get(f'{ENC_API_URL_DECK}{self.deckcode}')
         data = resp.json()
 
         self.raw = data

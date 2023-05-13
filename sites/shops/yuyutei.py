@@ -91,7 +91,7 @@ def yyt_scrape_cards(ver: str):
             id = card_unit.find(class_='id').text.strip()
             price = int(card_unit.find(class_='price').text.strip().split()[-1][:-1])
             stock = card_unit.find(class_='stock').text.strip()[2:]
-            img_url = card_unit.find(class_='image').img['src']
+            img_url = card_unit.find(class_='image').img['src'].replace('90_126', 'front')
             if stock == '×':
                 stock = '0'
             elif stock == '◯':

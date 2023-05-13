@@ -1,10 +1,11 @@
 import argparse
 import sites.shops.yuyutei as yyt
-import sites.decklists.encore as enc
+import sites.databases.encore as enc
+import proxy.generate as gen
 from sites.shops.yuyutei import Yuyutei
 from data.card import Card
 
-from sites.decklists.encore import EncoreDecks
+from sites.databases.encore import EncoreDecks
 from argparse import ArgumentParser
 
 """
@@ -46,14 +47,14 @@ total_price, instock_price, missing, errors = report.get_list_price(deck)
 print(f'Deck code {deck_code} costs {total_price} on YYT')
 """
 
-"""
-v = enc.enc_get_decklist('BNC1m4Rmw')
-c = yyt.yyt_scrape_cards('azl')
+
+v = enc.enc_get_decklist('6LJdJQAqy')
+c = yyt.yyt_scrape_cards('dct')
 
 for card in v:
-    if card[0] in c:
-        card_data = enc.enc_get_card(card[0])
-        print(f'{card[0]} ({card[1]}): {card_data["locale"]["EN"]["ability"]}')
-        # print(f'{card[0]} ({card[1]}): {c[card[0]].img_url}')
-"""
+    card_code = card[0]
+    if card_code in c:
+        img_url = c[card_code].img_url
+        gen.generate_proxy(card_code, img_url, f'{card_code.split("/")[-1]}.png')
+
 
