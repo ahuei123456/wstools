@@ -2,79 +2,26 @@ from dataclasses import dataclass
 
 @dataclass
 class Card:
-    """Class for handling data for a WS card"""
-    cid: str
-    price: int
-    stock: str
-    rarity: str
-    img_url: str
-
-    def playset_price(self) -> int:
-        return self.price * 4
-    
-    def playset_missing(self) -> int:
-        return self.quantity_missing(4)
-
-    def quantity_missing(self, qty: int) -> int:
-        if self.stock == '10+':
-            return 0
-        return max(qty - int(self.stock), 0)
+    """Class containing card data"""
+    card_code: str
+    attributes: list[str]
+    abilities: list[str]
+    card_type: str
+    color: str
 
 @dataclass
-class Report:
-    """Class for storing scraped data from an online store"""
-    cards: dict[str, Card]
-    site: str
+class Decklist:
+    """Class for handling data for a WS decklist"""
+    source: str
+    cards: list[Card]
 
-    def get_card(self, cid: str) -> Card:
-        if cid.lower() in self.cards:
-            return self.cards[cid.lower()]
-        
-        raise KeyError(f'Card id {cid} not found.')
-
-    def get_price(self, cid: str) -> int:
-        return self.get_card(cid).price
-
-    def get_cards_by_rarity(self, *rarities) -> list[Card]:
-        cards = []
-        for card in self.cards.values():
-            if card.rarity in rarities:
-                cards.append(card)
-            
-        return cards
+    def get_unique_cards(self):
+        return {card.card_code: card for card in self.cards}
     
-    def get_list_price(self, card_list: list[tuple[str, int]]) -> tuple[int, int, list[str, int], list[str]]:
-        errors = []
-
-        total_price = 0
-        actual_price = 0
-        missing_cards = []
-        for data in card_list:
-            cid = data[0]
-            qty = data[1]
-
-            try:
-                card = self.get_card(cid)
-                missing_qty = card.quantity_missing(qty)
-                total_price += qty * card.price
-                actual_price += qty * card.price
-                if missing_qty != 0:
-                    actual_price -= qty * card.price
-                    missing_cards.append((cid, missing_qty))
-            except:
-                errors.append(cid)
+    def get_card_count(self):
+        count = {}
+        for card in self.cards:
+            count.setdefault(card.card_code, [card, 0])[1] += 1
         
-        return total_price, actual_price, missing_cards, errors
-
-    def get_playset_price(self, *rarities) -> tuple[int, int, list[tuple[str, int]]]:
-        total_price = 0
-        actual_price = 0
-        missing_cards = []
-        for card in self.get_cards_by_rarity(*rarities):
-            total_price += 4 * card.price
-            missing_qty = card.playset_missing()
-            actual_price += (4 - missing_qty) * card.price
-            if missing_qty > 0:
-                missing_cards.append((card.cid, missing_qty))
+        return count
         
-        return total_price, actual_price, missing_cards

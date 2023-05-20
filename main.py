@@ -1,11 +1,10 @@
 import argparse
 import sites.shops.yuyutei as yyt
 import sites.databases.encore as enc
+import sites.databases.hotc as hotc
 import proxy.generate as gen
-from sites.shops.yuyutei import Yuyutei
 from data.card import Card
 
-from sites.databases.encore import EncoreDecks
 from argparse import ArgumentParser
 
 """
@@ -48,13 +47,20 @@ print(f'Deck code {deck_code} costs {total_price} on YYT')
 """
 
 
-v = enc.enc_get_decklist('6LJdJQAqy')
-c = yyt.yyt_scrape_cards('dct')
 
-for card in v:
-    card_code = card[0]
-    if card_code in c:
-        img_url = c[card_code].img_url
-        gen.generate_proxy(card_code, img_url, f'{card_code.split("/")[-1]}.png')
+
+# v = enc.enc_get_decklist('X6LSRnhEL')
+# c = yyt.yyt_scrape_cards('rz')
+# c.update(yyt.yyt_scrape_cards('rz2.0'))
+# c.update(yyt.yyt_scrape_cards('rz3.0'))
+# c.update(yyt.yyt_scrape_cards('rzext1.0'))
+# for card in v:
+#     card_code = card[0]
+#     if card_code in c:
+#         img_url = c[card_code].img_url
+#         gen.generate_proxy(card_code, img_url, f'{card_code.split("/")[-1]}.png')
+
+c = hotc.hotc_get_card('AW/S43-025')
+print(c)
 
 

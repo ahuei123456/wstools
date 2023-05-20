@@ -108,12 +108,6 @@ def load_image_fom_url(url: str) -> Image:
     return Image.open(BytesIO(img_data))
 
 
-def retrieve_tl(card_data):
-    try:
-        return card_data["locale"]["EN"]["ability"]
-    except:
-        return 'TL not available'
-
 if __name__ == '__main__':
     # Set the text and background color
     text: str = '[C] – All of your other《Knocker-Up》or《Yura Island》Characters gain +500 Power.'
