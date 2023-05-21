@@ -2,8 +2,10 @@ import argparse
 import sites.shops.yuyutei as yyt
 import sites.databases.encore as enc
 import sites.databases.hotc as hotc
+import sites.shops.novatcg as nova
 import proxy.generate as gen
 from data.card import Card
+import json
 
 from argparse import ArgumentParser
 
@@ -60,7 +62,36 @@ print(f'Deck code {deck_code} costs {total_price} on YYT')
 #         img_url = c[card_code].img_url
 #         gen.generate_proxy(card_code, img_url, f'{card_code.split("/")[-1]}.png')
 
-c = hotc.hotc_get_card('AW/S43-025')
-print(c)
+# c = hotc.hotc_get_card('AW/S43-025')
+# print(c)
 
+# print(yyt.yyt_scrape_sets('ok'))
 
+# code_to_image_mappings = {}
+
+# sets = yyt.yyt_scrape_sets()
+# for key in sets:
+#     print(f'processing {key}')
+#     codes = yyt.yyt_scrape_codes(key)
+
+#     for code in codes:
+#         if code in code_to_image_mappings:
+#             code_to_image_mappings[code].append(key)
+#         else:
+#             code_to_image_mappings[code] = [key]
+
+# with open('yyt_mappings.json', 'w') as f:
+#     json.dump(code_to_image_mappings, f)
+
+parser = ArgumentParser()
+parser.add_argument('-dc', '--deck_code', help='Deck code on EncoreDecks')
+
+args = parser.parse_args()
+
+dl = enc.enc_get_decklist(args.deck_code)
+
+for c in dl.cards:
+    card_code = c.card_code
+    ec = nova.nova_get_card_sale(card_code)
+
+    gen.generate_proxy(c, ec.img_url, f'{card_code.split("/")[-1]}.png')
