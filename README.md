@@ -21,7 +21,8 @@ Create a `config.json` in the repo root:
 ```json
 {
   "DISCORD_TOKEN": "your-bot-token",
-  "GUILDS": [123456789012345678]
+  "GUILDS": [123456789012345678],
+  "RATE_LIMIT_EXEMPT_USER_IDS": [123456789012345678]
 }
 ```
 
@@ -38,6 +39,7 @@ The bot registers a slash command:
 ```
 
 It generates the deck PDF and uploads it back to Discord.
+Users listed in `RATE_LIMIT_EXEMPT_USER_IDS` bypass the `/generate_proxy` cooldown.
 
 ## Usage
 

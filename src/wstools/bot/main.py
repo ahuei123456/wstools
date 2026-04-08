@@ -1,5 +1,6 @@
 import argparse
 import logging
+import math
 import sys
 from typing import Any
 
@@ -47,6 +48,14 @@ async def on_command_error(
     original_error = getattr(error, "original", error)
 
     match original_error:
+        case app_commands.CommandOnCooldown() as exc:
+            message = format_cooldown_message(exc.retry_after)
+            _log.warning(
+                "%s - Command '%s' hit cooldown, retry_after=%.2fs.",
+                user_info,
+                command_name,
+                exc.retry_after,
+            )
         case BotCommandError() as exc:
             message = str(exc)
             log_level = getattr(exc, "log_level", logging.INFO)
@@ -71,6 +80,12 @@ async def on_command_error(
             await interaction.followup.send(message, ephemeral=True)
     except discord.HTTPException as exc:
         _log.error("%s - Failed to send error response: %s", user_info, exc)
+
+
+def format_cooldown_message(retry_after: float) -> str:
+    seconds = max(1, math.ceil(retry_after))
+    noun = "second" if seconds == 1 else "seconds"
+    return f"Rate limit hit. Please wait {seconds} {noun} before generating another proxy PDF."
 
 
 @client.event

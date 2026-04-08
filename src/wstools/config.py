@@ -37,6 +37,12 @@ def load_config(path: str = "config.json") -> dict[str, Any]:
     ):
         raise ConfigError("GUILDS must be a list of Discord guild IDs.")
 
+    exempt_users = data.get("RATE_LIMIT_EXEMPT_USER_IDS", [])
+    if not isinstance(exempt_users, list) or not all(
+        isinstance(user_id, int) for user_id in exempt_users
+    ):
+        raise ConfigError("RATE_LIMIT_EXEMPT_USER_IDS must be a list of Discord user IDs.")
+
     _config_cache = data
     _log.info("Configuration loaded successfully from %s", config_path)
     return _config_cache
