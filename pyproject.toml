@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wstools"
+version = "0.1.0"
+description = "Weiss Schwarz deck, pricing, and proxy generation tools."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "beautifulsoup4>=4.12.3",
+  "discord-py>=2.7.1",
+  "pillow>=11.2.1",
+  "requests>=2.32.3",
+]
+
+[project.scripts]
+wstools = "wstools.cli:main"
+wstools-bot = "wstools.bot.main:main"
+
+[dependency-groups]
+dev = [
+  "prek>=0.1.2",
+  "pyrefly>=0.28.0",
+  "pytest>=8.3.5",
+  "ruff>=0.11.5",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+wstools = ["assets/*.ttf"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+  "E",
+  "F",
+  "I",
+]
+
+[tool.pyrefly]
+project-includes = [
+    "**/*.py*",
+    "**/*.ipynb",
+]
