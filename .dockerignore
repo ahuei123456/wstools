@@ -1,0 +1,12 @@
+.git
+.gitignore
+.pytest_cache
+.ruff_cache
+.venv
+__pycache__/
+*.pyc
+config.json
+generated/
+tests/
+scripts/
+install_neovim_latest.sh

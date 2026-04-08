@@ -32,6 +32,41 @@ Run the bot:
 uv run wstools-bot --config-path config.json
 ```
 
+Run the bot in Docker:
+
+```bash
+scripts/deploy.sh
+```
+
+The Docker deploy script will:
+
+- build the image from [Dockerfile](/home/dyreatic/Projects/wstools/Dockerfile)
+- pull the latest repo changes with `git pull --ff-only`
+- replace any existing `wstools-bot` container
+- start the bot detached with `--restart always`
+- mount `config.json` into the container at `/app/config.json`
+
+Useful options:
+
+- `--config-path /absolute/path/to/config.json` to use a config outside the repo root
+- `--container-name ws-bot` to use a different container name
+- `--image-name ws-bot` to tag the built image differently
+- `--skip-pull` to deploy without pulling the latest Git changes first
+- `--skip-prune` to keep old dangling images
+
+`scripts/deploy_bot_docker.sh` remains as a compatibility wrapper around `scripts/deploy.sh`.
+
+Stop a Docker-deployed bot:
+
+```bash
+scripts/kill_bot_docker.sh
+```
+
+Useful options:
+
+- `--container-name ws-bot` to stop a non-default container
+- `--remove-image --image-name ws-bot:prod` to remove the built image after stopping the container
+
 The bot registers a slash command:
 
 ```text
